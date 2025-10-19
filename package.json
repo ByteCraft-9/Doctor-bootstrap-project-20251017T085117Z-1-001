@@ -1,0 +1,19 @@
+{
+  "name": "doctor-bootstrap-project-20251017t085117z-1-001",
+  "version": "1.0.0",
+  "description": "**Frontend-Only Version** - A professional medical website built with Bootstrap, featuring patient feedback, appointment scheduling, and admin panel. All data is stored locally in the browser using localStorage.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd doctor-admin-backend && node index.js",
+    "dev": "cd doctor-admin-backend && node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "dotenv": "^17.2.3"
+  }
+}

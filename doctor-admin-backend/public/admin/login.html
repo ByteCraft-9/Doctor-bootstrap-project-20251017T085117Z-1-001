@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login - Dr. M. Babar Imran</title>
+    <!-- css bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <!--icon-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+        .admin-logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+        .login-title {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .form-control:focus {
+            border-color: #17a2b8;
+            box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="login-card">
+                    <div class="text-center">
+                        <img src="../images/Logo.png" alt="Dr. M. Babar Imran Logo" class="admin-logo">
+                        <h2 class="login-title">Admin Login</h2>
+                        <p class="login-subtitle">Dr. M. Babar Imran (TI)<br>Access Admin Panel</p>
+                    </div>
+                    
+                    <form id="adminLoginForm">
+                        <div class="mb-3">
+                            <label for="adminEmail" class="form-label">
+                                <i class="bi bi-envelope me-2"></i>Email Address
+                            </label>
+                            <input type="email" class="form-control" id="adminEmail" name="email" 
+                                   placeholder="Enter your email address" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="adminPassword" class="form-label">
+                                <i class="bi bi-lock me-2"></i>Password
+                            </label>
+                            <input type="password" class="form-control" id="adminPassword" name="password" 
+                                   placeholder="Enter your password" required>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-info text-white btn-login">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Login to Admin Panel
+                            </button>
+                        </div>
+                        
+                        <div id="errorMessage" class="error-message text-center" style="display: none;"></div>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Secure admin access only
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- js bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <!-- Data Management -->
+    <script src="../js/data.js"></script>
+    <!-- Admin Routing -->
+    <script src="../js/admin-routing.js"></script>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+            const errorDiv = document.getElementById('errorMessage');
+            
+            // Clear previous error
+            errorDiv.style.display = 'none';
+            
+            try {
+                // Check credentials using DataManager
+                const isAuthenticated = DataManager.admin.authenticate(email, password);
+                
+                if (isAuthenticated) {
+                    // Login successful, set login flag and redirect to admin panel
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminEmail', email);
+                    window.location.href = 'index.html';
+                } else {
+                    // Login failed
+                    errorDiv.textContent = 'Invalid credentials. Please try again.';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                // Error accessing data
+                console.error('Login error:', error);
+                errorDiv.textContent = 'Authentication error. Please try again.';
+                errorDiv.style.display = 'block';
+            }
+        });
+        
+        // Add default credentials hint for demo
+        document.addEventListener('DOMContentLoaded', function() {
+            const hint = document.createElement('div');
+            hint.className = 'alert alert-info mt-3';
+            hint.innerHTML = '<small><strong>Demo credentials:</strong><br>Email: 123@gmail.com<br>Password: 123</small>';
+            document.querySelector('.login-card').appendChild(hint);
+        });
+    </script>
+</body>
+
+</html>

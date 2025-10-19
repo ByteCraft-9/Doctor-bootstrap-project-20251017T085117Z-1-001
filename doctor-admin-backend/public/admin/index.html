@@ -1,0 +1,1571 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Panel - Dr. M. Babar Imran</title>
+    <!-- css bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <!--icon-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <!-- font icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- css file -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body class="admin-body">
+
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="admin-brand d-flex align-items-center">
+                        <img src="../images/Logo.png" alt="Dr. M. Babar Imran Thyroid Specialist" class="admin-header-logo me-3">
+                        <div>
+                            <h4 class="admin-brand-title">Admin Panel</h4>
+                            <p class="admin-brand-subtitle">Dr. M. Babar Imran (TI)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="admin-user-info">
+                        <span class="admin-time" id="currentTime"></span>
+                        <button class="btn btn-outline-light btn-sm ms-3" onclick="logout()">
+                            <i class="bi bi-box-arrow-right me-1"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Navigation -->
+    <nav class="admin-nav">
+        <div class="container-fluid">
+            <ul class="admin-nav-list">
+                <li class="admin-nav-item active" data-section="dashboard">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </li>
+                <li class="admin-nav-item" data-section="messages">
+                    <i class="bi bi-envelope"></i>
+                    <span>Messages</span>
+                </li>
+                <li class="admin-nav-item" data-section="feedback">
+                    <i class="bi bi-chat-dots"></i>
+                    <span>Feedback</span>
+                </li>
+                <li class="admin-nav-item" data-section="availability">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Availability</span>
+                </li>
+                <li class="admin-nav-item" data-section="services">
+                    <i class="bi bi-gear"></i>
+                    <span>Services</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Admin Content -->
+    <main class="admin-main">
+        <div class="container-fluid">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="admin-section active">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="admin-section-title">Dashboard Overview</h2>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="admin-stat-card">
+                            <div class="stat-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">24</h3>
+                                <p class="stat-label">New Messages</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="admin-stat-card">
+                            <div class="stat-icon">
+                                <i class="bi bi-chat-dots"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">15</h3>
+                                <p class="stat-label">Patient Reviews</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="admin-stat-card">
+                            <div class="stat-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">8</h3>
+                                <p class="stat-label">Today's Appointments</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="admin-stat-card">
+                            <div class="stat-icon">
+                                <i class="bi bi-gear"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 class="stat-number">4</h3>
+                                <p class="stat-label">Active Services</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages-section" class="admin-section">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="admin-section-title">Messages</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="admin-content-card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="m-0">Recent Messages</h5>
+                                <div class="d-flex gap-2">
+                                    <button id="filterAll" class="btn btn-outline-secondary btn-sm active">All</button>
+                                    <button id="filterUnread" class="btn btn-outline-secondary btn-sm">Unread</button>
+                                    <button id="markAllReadBtn" class="btn btn-info btn-sm">Mark All as Read</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="message-list" id="adminMessageList">
+                                    <!-- messages populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feedback Section -->
+            <section id="feedback-section" class="admin-section">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="admin-section-title">Patient Feedback</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="admin-content-card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Recent Reviews</h5>
+                                <div class="d-flex gap-2">
+                                    <button id="allFeedbacksBtn" class="btn btn-outline-secondary btn-sm active">All</button>
+                                    <button id="pendingFeedbacksBtn" class="btn btn-outline-secondary btn-sm">Pending</button>
+                                    <button id="approvedFeedbacksBtn" class="btn btn-outline-secondary btn-sm">Approved</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th style="width: 60px;">ID</th>
+                                                <th style="width: 150px;">Name</th>
+                                                <th style="width: 300px;">Message</th>
+                                                <th style="width: 100px;">Rating</th>
+                                                <th style="width: 100px;">Status</th>
+                                                <th style="width: 120px;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="feedback-list">
+                                            <!-- Feedback rows will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Availability Section -->
+            <section id="availability-section" class="admin-section">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="admin-section-title">Availability Management</h2>
+                    </div>
+                </div>
+                <!-- Availability Controls -->
+                <div class="row mb-4">
+                    <div class="col-lg-6">
+                        <div class="admin-content-card">
+                            <div class="card-header">
+                                <h5>Availability</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="availabilityForm">
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="isAvailableSwitch">
+                                        <label class="form-check-label" for="isAvailableSwitch">Available</label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="availabilityNote">Note</label>
+                                        <input type="text" class="form-control" id="availabilityNote" placeholder="e.g., On leave today">
+                                    </div>
+                                    <button type="submit" class="btn btn-info text-white">Save</button>
+                                    <span class="ms-3 text-muted" id="availabilitySavedMsg" style="display:none;">Saved</span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <!-- Maqsooda Zia Hospital Editor (Left) -->
+                    <div class="col-lg-6">
+                        <div class="admin-content-card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Maqsooda Zia Hospital</h5>
+                                <button id="saveMaqsooda" class="btn btn-info btn-sm">Save</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="maqsoodaAddress">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Map URL</label>
+                                    <input type="url" class="form-control" id="maqsoodaMap">
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle">
+                                        <thead><tr><th>Day</th><th>Enable</th><th>Start</th><th>End</th></tr></thead>
+                                        <tbody id="maqsoodaWeekly"></tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-3">
+                                    <h6>Exceptions (Not available / custom)</h6>
+                                    <div class="d-flex gap-2 flex-wrap align-items-end">
+                                        <div>
+                                            <label class="form-label">Date</label>
+                                            <input type="date" class="form-control" id="maqsoodaExDate">
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Note</label>
+                                            <input type="text" class="form-control" id="maqsoodaExNote" placeholder="Not available">
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Available?</label>
+                                            <select class="form-select" id="maqsoodaExAvail">
+                                                <option value="false" selected>No (Unavailable)</option>
+                                                <option value="true">Yes</option>
+                                            </select>
+                                        </div>
+                                        <button id="maqsoodaAddEx" class="btn btn-outline-info">Add</button>
+                                    </div>
+                                    <ul id="maqsoodaExList" class="list-group list-group-flush mt-2"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PINUM Hospital Editor (Right) -->
+                    <div class="col-lg-6">
+                        <div class="admin-content-card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>PINUM Hospital</h5>
+                                <button id="savePinum" class="btn btn-info btn-sm">Save</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="pinumAddress">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Map URL</label>
+                                    <input type="url" class="form-control" id="pinumMap">
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle">
+                                        <thead><tr><th>Day</th><th>Enable</th><th>Start</th><th>End</th></tr></thead>
+                                        <tbody id="pinumWeekly"></tbody>
+                                    </table>
+                                </div>
+                                <div class="mt-3">
+                                    <h6>Exceptions (Not available / custom)</h6>
+                                    <div class="d-flex gap-2 flex-wrap align-items-end">
+                                        <div>
+                                            <label class="form-label">Date</label>
+                                            <input type="date" class="form-control" id="pinumExDate">
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Note</label>
+                                            <input type="text" class="form-control" id="pinumExNote" placeholder="Not available">
+                                        </div>
+                                        <div>
+                                            <label class="form-label">Available?</label>
+                                            <select class="form-select" id="pinumExAvail">
+                                                <option value="false" selected>No (Unavailable)</option>
+                                                <option value="true">Yes</option>
+                                            </select>
+                                        </div>
+                                        <button id="pinumAddEx" class="btn btn-outline-info">Add</button>
+                                    </div>
+                                    <ul id="pinumExList" class="list-group list-group-flush mt-2"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services-section" class="admin-section">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="admin-section-title">Services Management</h2>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="bi bi-heart-pulse"></i>
+                            </div>
+                            <h5>Specialized Treatments</h5>
+                            <p>Advanced thyroid treatment protocols and specialized care for complex cases.</p>
+                            <div class="service-status">
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                            <div class="service-actions">
+                                <button class="btn btn-sm btn-outline-info">Edit</button>
+                                <button class="btn btn-sm btn-outline-secondary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="bi bi-radioactive"></i>
+                            </div>
+                            <h5>Nuclear Medicine Treatment</h5>
+                            <p>Radioactive iodine therapy and advanced nuclear medicine treatments.</p>
+                            <div class="service-status">
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                            <div class="service-actions">
+                                <button class="btn btn-sm btn-outline-info">Edit</button>
+                                <button class="btn btn-sm btn-outline-secondary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="bi bi-gear"></i>
+                            </div>
+                            <h5>Nuclear Medicine Treatments</h5>
+                            <p>Comprehensive nuclear medicine diagnostic and therapeutic services.</p>
+                            <div class="service-status">
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                            <div class="service-actions">
+                                <button class="btn btn-sm btn-outline-info">Edit</button>
+                                <button class="btn btn-sm btn-outline-secondary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                            <h5>General Consultations</h5>
+                            <p>Personalized assessments and treatment plans for thyroid disorders.</p>
+                            <div class="service-status">
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                            <div class="service-actions">
+                                <button class="btn btn-sm btn-outline-info">Edit</button>
+                                <button class="btn btn-sm btn-outline-secondary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Success Toast -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                    Hospital details updated successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Toast -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="errorToastMessage">
+                    Failed to update hospital details.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- js file -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <!-- Data Management -->
+    <script src="../js/data.js"></script>
+    <!-- Admin Routing -->
+    <script src="../js/admin-routing.js"></script>
+
+    <script>
+        // Enter admin panel function
+        function enterAdminPanel() {
+            // Add a smooth transition effect
+            const modal = document.getElementById('welcomeModal');
+            const modalContent = modal.querySelector('.modal-content');
+            
+            // Add fade out animation
+            modalContent.style.transition = 'all 0.5s ease-out';
+            modalContent.style.transform = 'scale(0.8)';
+            modalContent.style.opacity = '0';
+            
+            // Hide modal after animation
+            setTimeout(() => {
+                modal.style.display = 'none';
+                // Show the main admin content
+                document.querySelector('.admin-header').style.display = 'block';
+                document.querySelector('.admin-nav').style.display = 'block';
+                document.querySelector('.admin-main').style.display = 'block';
+            }, 500);
+        }
+
+        // Close welcome modal (keeping for potential future use)
+        function closeWelcomeModal() {
+            const modal = document.getElementById('welcomeModal');
+            const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
+            modalInstance.hide();
+        }
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.admin-nav-item');
+            const sections = document.querySelectorAll('.admin-section');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const targetSection = this.getAttribute('data-section');
+                    
+                    // Remove active class from all nav items and sections
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+                    
+                    // Add active class to clicked nav item and corresponding section
+                    this.classList.add('active');
+                    document.getElementById(targetSection + '-section').classList.add('active');
+                });
+            });
+        });
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear any stored session data
+                localStorage.removeItem('adminLoggedIn');
+                sessionStorage.clear();
+                // Redirect to admin login page
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Update time display
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString();
+            const timeEl = document.getElementById('currentTime');
+            if (timeEl) {
+                timeEl.textContent = timeStr;
+            }
+        }
+
+        // Initialize admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in (simple client-side check)
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Start time updates
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+
+        // Animate stat numbers
+        function animateNumbers() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current);
+                    }
+                }, 30);
+            });
+        }
+
+        // Start animations when page loads
+        setTimeout(animateNumbers, 1000);
+    </script>
+
+    <script>
+        // Admin dynamic data: messages, feedback and availability via DataManager
+document.addEventListener('DOMContentLoaded', function(){
+            // MESSAGES LIST
+            const messageListEl = document.getElementById('adminMessageList');
+            const filterAllBtn = document.getElementById('filterAll');
+            const filterUnreadBtn = document.getElementById('filterUnread');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            let messageFilter = 'all';
+            function sanitizePhone(raw){
+                const d = String(raw||'').replace(/\D+/g,'');
+                if(d.startsWith('00')) return '+'+d.slice(2);
+                if(d.startsWith('92') && d.length>=10) return '+'.concat(d);
+                if(d.startsWith('0')) return '+92'+d.slice(1);
+                if(d.startsWith('3') && d.length===10) return '+92'+d; // 3xxxxxxxxx
+                if(d.startsWith('+')) return raw;
+                return d ? '+'.concat(d) : '';
+            }
+            function renderMessageItem(m){
+                const tel = sanitizePhone(m.phone);
+                const wa = tel.replace(/^\+/,'');
+                const text = encodeURIComponent(`Assalam o Alaikum ${m.name||''}. Regarding your message: ${m.message||''}`);
+                const time = new Date(m.created_at).toLocaleString();
+                const el = document.createElement('div');
+                el.className = 'message-item d-flex align-items-start justify-content-between border-bottom py-2';
+                if(m.read) el.style.opacity = '0.7';
+                el.dataset.id = m.id;
+                el.innerHTML = `
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="message-avatar"><i class="bi bi-person-fill"></i></div>
+                        <div class="message-content">
+                            <h6 class="mb-1">#${m.id} — ${m.name || 'Visitor'} <small class="text-muted">(${time})</small></h6>
+                            <div class="small text-muted mb-1">Phone: ${m.phone || '-'} • Email: ${m.email || '-'} • Location: ${m.location || '-'}</div>
+                            <p class="mb-1">${m.message || ''}</p>
+                        </div>
+                    </div>
+                    <div class="message-actions d-flex flex-column gap-1">
+                        <a class="btn btn-sm btn-success" target="_blank" href="https://wa.me/${wa}?text=${text}"><i class="bi bi-whatsapp"></i></a>
+                        <a class="btn btn-sm btn-primary" href="tel:${tel}"><i class="bi bi-telephone"></i></a>
+                        <a class="btn btn-sm btn-secondary" href="sms:${tel}?&body=${text}"><i class="bi bi-chat-dots"></i></a>
+                        <button class="btn btn-sm ${m.read?'btn-outline-warning':'btn-warning'} btn-toggle-read"><i class="bi bi-envelope-${m.read?'open':''}"></i></button>
+                        <button class="btn btn-sm btn-outline-danger btn-delete-msg"><i class="bi bi-trash"></i></button>
+                    </div>`;
+                return el;
+            }
+            function loadMessages(){
+                if(!messageListEl) return;
+                try{
+                    const list = DataManager.messages.getAll({ status: messageFilter });
+                    messageListEl.innerHTML = '';
+                    list.forEach(m => messageListEl.appendChild(renderMessageItem(m)));
+                }catch(e){
+                    console.error('Error loading messages:', e);
+                }
+            }
+            if(messageListEl){
+                messageListEl.addEventListener('click', (e)=>{
+                    const item = e.target.closest('.message-item');
+                    if(!item) return;
+                    const id = parseInt(item.dataset.id);
+                    if(e.target.closest('.btn-delete-msg')){
+                        if(!confirm('Delete this message?')) return;
+                        if(DataManager.messages.delete(id)){
+                            item.remove();
+                        } else {
+                            alert('Failed to delete');
+                        }
+                    } else if(e.target.closest('.btn-toggle-read')){
+                        const currentlyRead = item.style.opacity === '0.7' || item.querySelector('.btn-toggle-read').classList.contains('btn-outline-warning');
+                        const updated = DataManager.messages.update(id, { read: !currentlyRead });
+                        if(updated) {
+                            loadMessages();
+                        } else {
+                            alert('Failed to update');
+                        }
+                    }
+                });
+                filterAllBtn?.addEventListener('click', ()=>{ messageFilter='all'; filterAllBtn.classList.add('active'); filterUnreadBtn.classList.remove('active'); loadMessages(); });
+                filterUnreadBtn?.addEventListener('click', ()=>{ messageFilter='unread'; filterUnreadBtn.classList.add('active'); filterAllBtn.classList.remove('active'); loadMessages(); });
+                markAllReadBtn?.addEventListener('click', ()=>{ DataManager.messages.markAllRead(); loadMessages(); });
+                loadMessages();
+            }
+
+            // FEEDBACK LIST
+            const feedbackList = document.querySelector('#feedback-section .feedback-list');
+            function buildStars(rating){
+                const r = parseFloat(rating || 0);
+                const full = Math.floor(r);
+                const half = r - full >= 0.5 ? 1 : 0;
+                let html = '';
+                for(let i=0;i<full;i++) html += '<i class="bi bi-star-fill"></i>';
+                if(half) html += '<i class="bi bi-star-half"></i>';
+                for(let i=full+half;i<5;i++) html += '<i class="bi bi-star"></i>';
+                return html;
+            }
+            function renderFeedbackItem(item){
+                const el = document.createElement('div');
+                el.className = 'feedback-item';
+                el.dataset.id = item.id;
+                const visBadge = item.visible !== false ? '<span class="badge bg-success ms-2">Visible</span>' : '<span class="badge bg-secondary ms-2">Not Visible</span>';
+                const toggleText = item.visible !== false ? 'Make Not Visible' : 'Make Visible';
+                el.innerHTML = `
+                    <div class="feedback-header">
+                        <div class="feedback-user">
+                            <div class="feedback-avatar"><i class="bi bi-person-fill"></i></div>
+                            <div>
+                                <h6>${item.name || 'Anonymous'} ${visBadge}</h6>
+                                <small class="text-muted">${item.location || ''}</small>
+                            </div>
+                        </div>
+                        <div class="feedback-rating">
+                            <div class="stars">${buildStars(item.rating)}</div>
+                            <span class="rating-number">${Number(item.rating||5).toFixed(1)}</span>
+                        </div>
+                    </div>
+                    <p class="feedback-text"></p>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button class="btn btn-sm btn-outline-secondary btn-toggle-visibility">${toggleText}</button>
+                        <button class="btn btn-sm btn-outline-danger btn-delete-feedback"><i class="bi bi-trash"></i> Delete</button>
+                    </div>
+                `;
+                el.querySelector('.feedback-text').textContent = item.text || '';
+                return el;
+            }
+            function loadFeedback(){
+                try {
+                    const list = DataManager.feedback.getAll();
+                    if (feedbackList){
+                        feedbackList.innerHTML = '';
+                        list.forEach(item => feedbackList.appendChild(renderFeedbackItem(item)));
+                    }
+                } catch(e) {
+                    console.error('Error loading feedback:', e);
+                }
+            }
+            function deleteFeedback(id, el){
+                try {
+                    if(DataManager.feedback.delete(id)){
+                        el.remove();
+                    } else {
+                        alert('Failed to delete');
+                    }
+                } catch(e){ 
+                    console.error('Error deleting feedback:', e);
+                    alert('Error deleting feedback'); 
+                }
+            }
+            function toggleVisibility(id, makeVisible){
+                try {
+                    const updated = DataManager.feedback.update(id, { visible: !!makeVisible });
+                    if(updated){ 
+                        loadFeedback(); 
+                    } else { 
+                        alert('Failed to update'); 
+                    }
+                } catch(e){ 
+                    console.error('Error updating feedback:', e);
+                    alert('Error updating feedback'); 
+                }
+            }
+            if (feedbackList){
+                feedbackList.addEventListener('click', (e) =>{
+                    const el = e.target.closest('.feedback-item');
+                    if(!el) return;
+                    const id = el.dataset.id;
+                    if(e.target.closest('.btn-delete-feedback')){
+                        if(id && confirm('Delete this feedback?')) deleteFeedback(parseInt(id), el);
+                    } else if(e.target.closest('.btn-toggle-visibility')){
+                        const btn = e.target.closest('.btn-toggle-visibility');
+                        const makeVisible = btn.textContent.toLowerCase().includes('make visible');
+                        toggleVisibility(parseInt(id), makeVisible);
+                    }
+                });
+                loadFeedback();
+            }
+
+            // AVAILABILITY FORM (Global)
+            const availabilityForm = document.getElementById('availabilityForm');
+            const isAvailableSwitch = document.getElementById('isAvailableSwitch');
+            const availabilityNote = document.getElementById('availabilityNote');
+            const availabilitySavedMsg = document.getElementById('availabilitySavedMsg');
+
+            // Function to fetch global availability from backend
+            function fetchGlobalAvailability() {
+                
+                fetch('/api/global-availability', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // Try to parse error response
+                        return response.text().then(errorText => {
+                            console.error('Error response text:', errorText);
+                            throw new Error(errorText || 'Network response was not ok');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    
+                    if (data.status === 'success' && data.data) {
+                        if (isAvailableSwitch) {
+                            isAvailableSwitch.checked = data.data.is_available;
+                        }
+                        
+                        if (availabilityNote) {
+                            availabilityNote.value = data.data.note || '';
+                        }
+                    } else {
+                        console.warn('Unexpected data format:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching global availability:', error);
+                    // Show error toast
+                    const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+                    document.getElementById('errorToastMessage').textContent = `Failed to fetch global availability: ${error.message}`;
+                    toast.show();
+                });
+            }
+
+            // Function to save global availability to backend
+            function saveGlobalAvailability(e) {
+                e.preventDefault();
+                
+                const payload = {
+                    is_available: isAvailableSwitch ? isAvailableSwitch.checked : true,
+                        note: availabilityNote ? availabilityNote.value : ''
+                };
+                
+                
+                fetch('/api/global-availability', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // Try to parse error response
+                        return response.text().then(errorText => {
+                            console.error('Error response text:', errorText);
+                            throw new Error(errorText || 'Network response was not ok');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    
+                    if (data.status === 'success') {
+                        // Show saved message
+                        if (availabilitySavedMsg) {
+                        availabilitySavedMsg.style.display = 'inline';
+                            setTimeout(() => availabilitySavedMsg.style.display = 'none', 1500);
+                        }
+                        
+                        // Create a toast to show success
+                        const toast = new bootstrap.Toast(document.getElementById('successToast'));
+                        document.getElementById('toastMessage').textContent = 'Global availability updated successfully!';
+                        toast.show();
+
+                        // Fetch updated data to confirm
+                        fetchGlobalAvailability();
+                    } else {
+                        throw new Error(data.message || 'Unknown error occurred');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving global availability:', error);
+                    
+                    // Create a toast to show error
+                    const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+                    document.getElementById('errorToastMessage').textContent = `Failed to update global availability: ${error.message}`;
+                    toast.show();
+                });
+            }
+
+            // Function to add exception
+            function addException(hospitalType) {
+                const dateInput = document.getElementById(`${hospitalType}ExDate`);
+                const noteInput = document.getElementById(`${hospitalType}ExNote`);
+                const availInput = document.getElementById(`${hospitalType}ExAvail`);
+                const exceptionsList = document.getElementById(`${hospitalType}ExList`);
+                
+                if (!dateInput || !noteInput || !availInput || !exceptionsList) {
+                    console.error('Exception input elements not found');
+                    return;
+                }
+                
+                const date = dateInput.value;
+                const note = noteInput.value;
+                const available = availInput.value === 'true';
+                
+                if (!date) {
+                    alert('Please select a date');
+                    return;
+                }
+                
+                // Create exception list item
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                
+                const badgeClass = available ? 'bg-success' : 'bg-danger';
+                const availabilityText = available ? 'Available' : 'Unavailable';
+                
+                li.innerHTML = `
+                    <div>
+                        <strong>${date}</strong>
+                        <span class="badge ${badgeClass} ms-2">${availabilityText}</span>
+                        ${note ? `<span class="text-muted ms-2">— ${note}</span>` : ''}
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger btn-remove-exception">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+                
+                // Add remove event listener
+                const removeBtn = li.querySelector('.btn-remove-exception');
+                removeBtn.addEventListener('click', () => {
+                    li.remove();
+                });
+                
+                // Append to list
+                exceptionsList.appendChild(li);
+                
+                // Clear inputs
+                dateInput.value = '';
+                noteInput.value = '';
+                availInput.value = 'false';
+            }
+
+            // Initialize event listeners
+            if(availabilityForm){
+                availabilityForm.addEventListener('submit', saveGlobalAvailability);
+                fetchGlobalAvailability();
+            }
+
+            // Exception add buttons
+            const maqsoodaAddExBtn = document.getElementById('maqsoodaAddEx');
+            const pinumAddExBtn = document.getElementById('pinumAddEx');
+            
+            if (maqsoodaAddExBtn) {
+                maqsoodaAddExBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    addException('maqsooda');
+                });
+            }
+            
+            if (pinumAddExBtn) {
+                pinumAddExBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    addException('pinum');
+                });
+            }
+        });
+    </script>
+    <script>
+        // Ensure weekly schedule tables are always populated
+        function populateWeeklyScheduleTables() {
+            // Days of the week with default configuration
+            const weekDays = [
+                { day: 'mon', label: 'Monday', enabled: true, start: '15:00', end: '18:00' },
+                { day: 'tue', label: 'Tuesday', enabled: true, start: '15:00', end: '18:00' },
+                { day: 'wed', label: 'Wednesday', enabled: true, start: '15:00', end: '18:00' },
+                { day: 'thu', label: 'Thursday', enabled: true, start: '15:00', end: '18:00' },
+                { day: 'fri', label: 'Friday', enabled: true, start: '15:00', end: '18:00' },
+                { day: 'sat', label: 'Saturday', enabled: false, start: '15:00', end: '18:00' },
+                { day: 'sun', label: 'Sunday', enabled: false, start: '', end: '' }
+            ];
+
+            // Populate tables for both hospitals
+            ['pinum', 'maqsooda'].forEach(prefix => {
+                const weeklyContainer = document.getElementById(`${prefix}Weekly`);
+                
+                // Clear existing rows
+                if (weeklyContainer) {
+                    weeklyContainer.innerHTML = '';
+
+                    // Create rows for each day
+                    weekDays.forEach(dayConfig => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                            <td style="min-width:110px;">${dayConfig.label}</td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input" 
+                                           id="${prefix}_${dayConfig.day}_en"
+                                           ${dayConfig.enabled ? 'checked' : ''}>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="time" class="form-control form-control-sm" 
+                                       id="${prefix}_${dayConfig.day}_start"
+                                       value="${dayConfig.start || ''}"
+                                       ${!dayConfig.enabled ? 'disabled' : ''}>
+                            </td>
+                            <td>
+                                <input type="time" class="form-control form-control-sm" 
+                                       id="${prefix}_${dayConfig.day}_end"
+                                       value="${dayConfig.end || ''}"
+                                       ${!dayConfig.enabled ? 'disabled' : ''}>
+                            </td>
+                        `;
+
+                        // Add event listener to enable/disable time inputs
+                        const enableCheckbox = tr.querySelector(`#${prefix}_${dayConfig.day}_en`);
+                        const startInput = tr.querySelector(`#${prefix}_${dayConfig.day}_start`);
+                        const endInput = tr.querySelector(`#${prefix}_${dayConfig.day}_end`);
+                        
+                        enableCheckbox.addEventListener('change', () => {
+                            startInput.disabled = !enableCheckbox.checked;
+                            endInput.disabled = !enableCheckbox.checked;
+                        });
+
+                        weeklyContainer.appendChild(tr);
+                    });
+                } else {
+                    console.error(`Weekly container not found for ${prefix}`);
+                }
+            });
+        }
+
+        // Function to fetch hospital availability data
+        function fetchHospitalAvailability() {
+            
+            fetch('/api/availability', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                
+                // Populate Maqsooda Hospital data
+                if (data.maqsooda) {
+                    const maqsoodaAddressEl = document.getElementById('maqsoodaAddress');
+                    const maqsoodaMapEl = document.getElementById('maqsoodaMap');
+                    
+                    if (maqsoodaAddressEl) maqsoodaAddressEl.value = data.maqsooda.hospital_address || '';
+                    if (maqsoodaMapEl) maqsoodaMapEl.value = data.maqsooda.hospital_map_url || '';
+                    
+                    // Populate weekly schedule
+                    if (data.maqsooda.weekly_schedule) {
+                        Object.keys(data.maqsooda.weekly_schedule).forEach(day => {
+                            const enableEl = document.getElementById(`maqsooda_${day}_en`);
+                            const startEl = document.getElementById(`maqsooda_${day}_start`);
+                            const endEl = document.getElementById(`maqsooda_${day}_end`);
+                            
+                            if (enableEl) enableEl.checked = data.maqsooda.weekly_schedule[day].enabled;
+                            if (startEl) startEl.value = data.maqsooda.weekly_schedule[day].start || '';
+                            if (endEl) endEl.value = data.maqsooda.weekly_schedule[day].end || '';
+                            
+                            // Disable/enable time inputs based on checkbox
+                            if (enableEl && startEl && endEl) {
+                                startEl.disabled = !enableEl.checked;
+                                endEl.disabled = !enableEl.checked;
+                            }
+                        });
+                    }
+
+                    // Populate exceptions
+                    const maqsoodaExList = document.getElementById('maqsoodaExList');
+                    if (maqsoodaExList && data.maqsooda.exceptions) {
+                        maqsoodaExList.innerHTML = ''; // Clear existing exceptions
+                        data.maqsooda.exceptions.forEach(ex => {
+                    const li = document.createElement('li');
+                            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                            
+                            const badgeClass = ex.available ? 'bg-success' : 'bg-danger';
+                            const availabilityText = ex.available ? 'Available' : 'Unavailable';
+                            
+                            li.innerHTML = `
+                                <div>
+                                    <strong>${ex.date}</strong>
+                                    <span class="badge ${badgeClass} ms-2">${availabilityText}</span>
+                                    ${ex.note ? `<span class="text-muted ms-2">— ${ex.note}</span>` : ''}
+                                </div>
+                                <button class="btn btn-sm btn-outline-danger btn-remove-exception">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            `;
+                            
+                            // Add remove event listener
+                            const removeBtn = li.querySelector('.btn-remove-exception');
+                            removeBtn.addEventListener('click', () => {
+                                li.remove();
+                            });
+                            
+                            maqsoodaExList.appendChild(li);
+                        });
+                    }
+                }
+                
+                // Populate PINUM Hospital data
+                if (data.pinum) {
+                    const pinumAddressEl = document.getElementById('pinumAddress');
+                    const pinumMapEl = document.getElementById('pinumMap');
+                    
+                    if (pinumAddressEl) pinumAddressEl.value = data.pinum.hospital_address || '';
+                    if (pinumMapEl) pinumMapEl.value = data.pinum.hospital_map_url || '';
+                    
+                    // Populate weekly schedule
+                    if (data.pinum.weekly_schedule) {
+                        Object.keys(data.pinum.weekly_schedule).forEach(day => {
+                            const enableEl = document.getElementById(`pinum_${day}_en`);
+                            const startEl = document.getElementById(`pinum_${day}_start`);
+                            const endEl = document.getElementById(`pinum_${day}_end`);
+                            
+                            if (enableEl) enableEl.checked = data.pinum.weekly_schedule[day].enabled;
+                            if (startEl) startEl.value = data.pinum.weekly_schedule[day].start || '';
+                            if (endEl) endEl.value = data.pinum.weekly_schedule[day].end || '';
+                            
+                            // Disable/enable time inputs based on checkbox
+                            if (enableEl && startEl && endEl) {
+                                startEl.disabled = !enableEl.checked;
+                                endEl.disabled = !enableEl.checked;
+                            }
+                        });
+                    }
+
+                    // Populate exceptions
+                    const pinumExList = document.getElementById('pinumExList');
+                    if (pinumExList && data.pinum.exceptions) {
+                        pinumExList.innerHTML = ''; // Clear existing exceptions
+                        data.pinum.exceptions.forEach(ex => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                            
+                            const badgeClass = ex.available ? 'bg-success' : 'bg-danger';
+                            const availabilityText = ex.available ? 'Available' : 'Unavailable';
+                            
+                            li.innerHTML = `
+                                <div>
+                                    <strong>${ex.date}</strong>
+                                    <span class="badge ${badgeClass} ms-2">${availabilityText}</span>
+                                    ${ex.note ? `<span class="text-muted ms-2">— ${ex.note}</span>` : ''}
+                                </div>
+                                <button class="btn btn-sm btn-outline-danger btn-remove-exception">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            `;
+                            
+                            // Add remove event listener
+                            const removeBtn = li.querySelector('.btn-remove-exception');
+                            removeBtn.addEventListener('click', () => {
+                                li.remove();
+                            });
+                            
+                            pinumExList.appendChild(li);
+                        });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching hospital availability:', error);
+                // Optionally show an error toast or message
+                const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+                document.getElementById('errorToastMessage').textContent = `Failed to fetch hospital details: ${error.message}`;
+                toast.show();
+            });
+        }
+
+        // Function to collect weekly schedule data
+        function collectWeekly(prefix) {
+            const weekly = {};
+            const weekDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+            weekDays.forEach(day => {
+                const enableEl = document.getElementById(`${prefix}_${day}_en`);
+                const startEl = document.getElementById(`${prefix}_${day}_start`);
+                const endEl = document.getElementById(`${prefix}_${day}_end`);
+
+                weekly[day] = {
+                    enabled: enableEl ? enableEl.checked : false,
+                    start: startEl ? startEl.value : '',
+                    end: endEl ? endEl.value : '',
+                };
+            });
+            
+            return weekly;
+        }
+
+        // Hospital Details Update Function
+        function updateHospitalDetails(hospitalType) {
+
+            const addressInput = document.getElementById(`${hospitalType}Address`);
+            const mapInput = document.getElementById(`${hospitalType}Map`);
+            
+            // Verify inputs exist
+            if (!addressInput || !mapInput) {
+                console.error(`Address or map input missing for ${hospitalType}`, {
+                    addressInput,
+                    mapInput
+                });
+                alert(`Failed to find input elements for ${hospitalType} hospital`);
+                return;
+            }
+
+            const weeklySchedule = collectWeekly(hospitalType);
+            const exceptionsList = document.getElementById(`${hospitalType}ExList`);
+            
+            // Collect exceptions from the list
+            const exceptions = Array.from(exceptionsList.children).map(li => {
+                const dateText = li.querySelector('strong') ? li.querySelector('strong').textContent : '';
+                const availableText = li.querySelector('.badge') ? li.querySelector('.badge').textContent : '';
+                const noteEl = li.querySelector('span');
+                
+                const exception = {
+                    date: dateText,
+                    available: availableText.includes('Available'),
+                    note: noteEl ? noteEl.textContent.replace('— ', '') : ''
+                };
+
+                return exception;
+            });
+
+            // Prepare payload
+            const payload = {
+                hospital_type: hospitalType,
+                hospital_name: hospitalType === 'maqsooda' ? 'Maqsooda Zia Hospital' : 'PINUM Hospital',
+                hospital_address: addressInput.value,
+                hospital_map_url: mapInput.value,
+                weekly_schedule: weeklySchedule,
+                exceptions: exceptions,
+                is_available: true, // Default to true, can be modified later
+                note: `${hospitalType} hospital availability details updated`
+            };
+
+            // Send to backend
+            fetch('/api/availability', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                
+                // Check if the response is ok (status in the range 200-299)
+                if (!response.ok) {
+                    // Try to parse error response
+                    return response.text().then(errorText => {
+                        console.error('Error response text:', errorText);
+                        throw new Error(errorText || 'Network response was not ok');
+                    }).catch(err => {
+                        console.error('Error parsing error response:', err);
+                    throw new Error('Network response was not ok');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+
+                if (data.status === 'success') {
+                    // Create a toast or alert to show success
+                    const toast = new bootstrap.Toast(document.getElementById('successToast'));
+                    document.getElementById('toastMessage').textContent = `${hospitalType.toUpperCase()} Hospital details updated successfully!`;
+                    toast.show();
+
+                    // Immediately fetch updated data to confirm
+                    fetchHospitalAvailability();
+                } else {
+                    throw new Error(data.message || 'Unknown error occurred');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating hospital details:', error);
+                
+                // Create a toast or alert to show error
+                const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+                document.getElementById('errorToastMessage').textContent = `Failed to update ${hospitalType.toUpperCase()} Hospital: ${error.message}`;
+                toast.show();
+            });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Populate weekly schedule tables
+            populateWeeklyScheduleTables();
+
+            // Fetch initial hospital availability
+            fetchHospitalAvailability();
+
+        // Add event listeners to save buttons
+            const saveMaqsoodaBtn = document.getElementById('saveMaqsooda');
+            const savePinumBtn = document.getElementById('savePinum');
+
+            if (saveMaqsoodaBtn) {
+                saveMaqsoodaBtn.addEventListener('click', () => {
+                    updateHospitalDetails('maqsooda');
+                });
+            } else {
+                console.error('Maqsooda save button not found');
+            }
+
+            if (savePinumBtn) {
+                savePinumBtn.addEventListener('click', () => {
+                    updateHospitalDetails('pinum');
+                });
+            } else {
+                console.error('PINUM save button not found');
+            }
+        });
+    </script>
+    <script>
+        // Feedback Management
+        function fetchAdminFeedbacks(approved = null) {
+            
+            const queryParams = new URLSearchParams();
+            if (approved !== null) {
+                queryParams.append('approved', approved);
+            }
+
+            fetch(`/api/admin/feedback?${queryParams.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                
+                const feedbackTableBody = document.querySelector('.feedback-list');
+
+                if (!feedbackTableBody) {
+                    console.warn('Admin feedback table body not found');
+                    return;
+                }
+
+                // Clear existing rows
+                feedbackTableBody.innerHTML = '';
+
+                // Check if we have any feedbacks
+                if (!data.data || data.data.length === 0) {
+                    feedbackTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-chat-dots fs-1 text-muted"></i><br>
+                                No feedbacks available
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                // Generate table rows
+                data.data.forEach(feedback => {
+                    const row = generateFeedbackRow(feedback);
+                    feedbackTableBody.appendChild(row);
+                });
+                
+                })
+            .catch(error => {
+                console.error('Error fetching admin feedbacks:', error);
+                
+                const feedbackTableBody = document.querySelector('.feedback-list');
+                if (feedbackTableBody) {
+                    feedbackTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-danger text-center py-4">
+                                <i class="bi bi-exclamation-triangle fs-1 text-danger"></i><br>
+                                Failed to load feedbacks. Please try again later.
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+        }
+
+        // Toggle Feedback Approval
+        // Toggle Feedback Visibility
+        function toggleFeedbackVisibility(feedbackId, visible) {
+            
+            fetch(`/api/admin/feedback/${feedbackId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ visible })
+            })
+            .then(response => {
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                
+                // Refresh the table after update
+                fetchAdminFeedbacks();
+
+                // Show success toast
+                const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+                document.getElementById('toastMessage').textContent = 
+                    visible 
+                    ? 'Feedback made visible successfully!' 
+                    : 'Feedback hidden successfully!';
+                successToast.show();
+            })
+            .catch(error => {
+                console.error('Error updating feedback visibility:', error);
+                
+                // Show error toast
+                const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+                document.getElementById('errorToastMessage').textContent = 
+                    `Failed to update feedback visibility: ${error.message}`;
+                errorToast.show();
+            });
+        }
+
+        // Toggle Feedback Visibility (was Featured)
+        function toggleFeedbackVisibility(feedbackId, visible) {
+
+            fetch(`/api/admin/feedback/${feedbackId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ visible })
+            })
+            .then(response => {
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                
+                // Refresh the table
+                fetchAdminFeedbacks();
+
+                // Show success toast
+                const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+                document.getElementById('toastMessage').textContent = 
+                    visible 
+                    ? 'Feedback is now visible!' 
+                    : 'Feedback has been hidden.';
+                successToast.show();
+            })
+            .catch(error => {
+                console.error('Error updating feedback visibility:', error);
+                
+                // Show error toast
+                const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+                document.getElementById('errorToastMessage').textContent = 
+                    `Failed to update feedback: ${error.message}`;
+                errorToast.show();
+            });
+        }
+
+        // Delete Feedback Function
+        function deleteFeedback(feedbackId) {
+            if (!confirm('Are you sure you want to delete this feedback? This action cannot be undone.')) {
+                return;
+            }
+
+
+            fetch(`/api/admin/feedback/${feedbackId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                
+                // Refresh the table after deletion
+                fetchAdminFeedbacks();
+
+                // Show success toast
+                const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+                document.getElementById('toastMessage').textContent = 'Feedback deleted successfully!';
+                successToast.show();
+            })
+            .catch(error => {
+                console.error('Error deleting feedback:', error);
+                
+                // Show error toast
+                const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+                document.getElementById('errorToastMessage').textContent = 
+                    `Failed to delete feedback: ${error.message}`;
+                errorToast.show();
+            });
+        }
+
+        // Generate table rows with updated visibility logic
+        function generateFeedbackRow(feedback) {
+            const row = document.createElement('tr');
+            
+            // Create each cell individually to ensure proper structure
+            const idCell = document.createElement('td');
+            idCell.className = 'text-center fw-bold';
+            idCell.textContent = feedback.id;
+            
+            const nameCell = document.createElement('td');
+            nameCell.className = 'fw-semibold';
+            nameCell.textContent = feedback.name || 'Anonymous';
+            
+            const messageCell = document.createElement('td');
+            messageCell.className = 'text-truncate';
+            messageCell.style.maxWidth = '300px';
+            messageCell.title = feedback.message || '';
+            messageCell.textContent = feedback.message || 'No message';
+            
+            const ratingCell = document.createElement('td');
+            ratingCell.className = 'text-center';
+            const ratingBadge = document.createElement('span');
+            const ratingValue = parseFloat(feedback.rating) || 0;
+            ratingBadge.className = ratingValue > 0 ? 'badge bg-warning text-dark' : 'badge bg-secondary';
+            ratingBadge.textContent = ratingValue > 0 ? '★ '.repeat(Math.floor(ratingValue)) + ` ${ratingValue}/5` : 'N/A';
+            ratingCell.appendChild(ratingBadge);
+            
+            const statusCell = document.createElement('td');
+            statusCell.className = 'text-center';
+            const statusBadge = document.createElement('span');
+            statusBadge.className = feedback.visible ? 'badge bg-success' : 'badge bg-danger';
+            statusBadge.textContent = feedback.visible ? 'Visible' : 'Hidden';
+            statusCell.appendChild(statusBadge);
+            
+            const actionsCell = document.createElement('td');
+            actionsCell.className = 'text-center';
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'd-flex gap-1 justify-content-center';
+            
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = `btn btn-sm ${feedback.visible ? 'btn-outline-warning' : 'btn-warning'}`;
+            toggleBtn.title = feedback.visible ? 'Hide' : 'Show' + ' feedback';
+            toggleBtn.onclick = () => toggleFeedbackVisibility(feedback.id, !feedback.visible);
+            toggleBtn.innerHTML = `<i class="bi bi-eye${feedback.visible ? '-slash' : ''}"></i>`;
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'btn btn-sm btn-outline-danger';
+            deleteBtn.title = 'Delete feedback';
+            deleteBtn.onclick = () => deleteFeedback(feedback.id);
+            deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+            
+            actionsDiv.appendChild(toggleBtn);
+            actionsDiv.appendChild(deleteBtn);
+            actionsCell.appendChild(actionsDiv);
+            
+            // Append all cells to the row
+            row.appendChild(idCell);
+            row.appendChild(nameCell);
+            row.appendChild(messageCell);
+            row.appendChild(ratingCell);
+            row.appendChild(statusCell);
+            row.appendChild(actionsCell);
+            
+            return row;
+        }
+
+        // Initialize feedback management
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fetch initial feedbacks
+            fetchAdminFeedbacks();
+
+            // Filter buttons
+            const allFeedbacksBtn = document.getElementById('allFeedbacksBtn');
+            const pendingFeedbacksBtn = document.getElementById('pendingFeedbacksBtn');
+            const approvedFeedbacksBtn = document.getElementById('approvedFeedbacksBtn');
+
+            if (allFeedbacksBtn) {
+                allFeedbacksBtn.addEventListener('click', () => fetchAdminFeedbacks());
+            }
+
+            if (pendingFeedbacksBtn) {
+                pendingFeedbacksBtn.addEventListener('click', () => fetchAdminFeedbacks(false));
+            }
+
+            if (approvedFeedbacksBtn) {
+                approvedFeedbacksBtn.addEventListener('click', () => fetchAdminFeedbacks(true));
+            }
+        });
+    </script>
+</body>
+
+</html>
