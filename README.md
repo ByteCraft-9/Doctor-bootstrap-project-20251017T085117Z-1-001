@@ -49,10 +49,7 @@
    - Main website: `index.html` or `http://localhost:8000`
    - Admin panel: `admin/index.html` or `http://localhost:8000/admin`
 
-## Admin Access
 
-- **Email**: `123@gmail.com`
-- **Password**: `123`
 
 ## Project Structure
 
