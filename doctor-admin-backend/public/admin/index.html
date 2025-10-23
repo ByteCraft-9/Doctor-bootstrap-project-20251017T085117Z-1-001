@@ -142,11 +142,7 @@
                         <div class="admin-content-card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="m-0">Recent Messages</h5>
-                                <div class="d-flex gap-2">
-                                    <button id="filterAll" class="btn btn-outline-secondary btn-sm active">All</button>
-                                    <button id="filterUnread" class="btn btn-outline-secondary btn-sm">Unread</button>
-                                    <button id="markAllReadBtn" class="btn btn-info btn-sm">Mark All as Read</button>
-                                </div>
+                                
                             </div>
                             <div class="card-body">
                                 <div class="message-list" id="adminMessageList">
@@ -441,6 +437,111 @@
 
     <script>
         // Enter admin panel function
+        console.log("✅ Admin JS loaded");
+
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("🌐 DOM fully loaded");
+
+            const messageListEl = document.getElementById("adminMessageList");
+            console.log("🧠 messageListEl =", messageListEl);
+
+            // --- Load Messages Function ---
+            async function loadMessages() {
+                console.log("🚀 loadMessages() called");
+
+                if (!messageListEl) {
+                    console.warn("⚠️ messageListEl not found");
+                    return;
+                }
+
+                try {
+                    console.log("📡 Sending request to /api/admin/messages ...");
+                    const res = await fetch("/api/admin/messages");
+                    console.log("📥 Raw Response:", res);
+
+                    const text = await res.text();
+                    console.log("📦 Raw Response Body:", text);
+
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (err) {
+                        console.error("❌ JSON Parse Error:", err);
+                        return;
+                    }
+
+                    console.log("✅ Parsed Messages Data:", data);
+
+                    messageListEl.innerHTML = "";
+                    if (data.length === 0) {
+                        messageListEl.innerHTML = "<p class='text-muted'>No messages found</p>";
+                        return;
+                    }
+
+                    // --- Build Table ---
+                    const table = document.createElement("table");
+                    table.className = "table table-striped table-bordered align-middle";
+                    table.innerHTML = `
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Location</th>
+                                <th>Message</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    `;
+                    const tbody = table.querySelector("tbody");
+
+                    data.forEach((m, index) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${m.name}</td>
+                            <td>${m.email}</td>
+                            <td>${m.location}</td>
+                            <td>${m.message}</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger delete-btn" data-id="${m.id}">
+                                    Delete
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    messageListEl.appendChild(table);
+
+                    // --- Delete Button Event ---
+                    document.querySelectorAll(".delete-btn").forEach(btn => {
+                        btn.addEventListener("click", async () => {
+                            const id = btn.dataset.id;
+                            if (!confirm("🗑️ Delete this message?")) return;
+                            console.log(`🗑️ Deleting message ID: ${id}`);
+                            const res = await fetch(`/api/admin/messages/${id}`, { method: "DELETE" });
+                            if (res.ok) {
+                                alert("✅ Message deleted");
+                                loadMessages();
+                            } else {
+                                alert("❌ Failed to delete message");
+                            }
+                        });
+                    });
+
+                } catch (e) {
+                    console.error("💥 loadMessages() failed:", e);
+                }
+            }
+
+            // --- Call function ---
+            console.log("🔁 Calling loadMessages() now...");
+            loadMessages();
+        });
+
+
         function enterAdminPanel() {
             // Add a smooth transition effect
             const modal = document.getElementById('welcomeModal');
@@ -563,7 +664,7 @@
 
     <script>
         // Admin dynamic data: messages, feedback and availability via DataManager
-document.addEventListener('DOMContentLoaded', function(){
+        document.addEventListener('DOMContentLoaded', function(){
             // MESSAGES LIST
             const messageListEl = document.getElementById('adminMessageList');
             const filterAllBtn = document.getElementById('filterAll');
@@ -606,43 +707,59 @@ document.addEventListener('DOMContentLoaded', function(){
                     </div>`;
                 return el;
             }
-            function loadMessages(){
-                if(!messageListEl) return;
-                try{
-                    const list = DataManager.messages.getAll({ status: messageFilter });
+           
+            async function loadMessages() {
+                console.log("🟡 loadMessages() called");
+
+                if (!messageListEl) {
+                    console.error("❌ messageListEl not found in DOM.");
+                    return;
+                }
+
+                console.log("📡 Fetching messages from /api/admin/messages ...");
+                try {
+                    const res = await fetch("/api/admin/messages");
+                    console.log("🔍 Response status:", res.status, res.statusText);
+
+                    const text = await res.text();
+                    console.log("📜 Raw response text:", text);
+
+                    // Check if response looks like HTML
+                    if (text.startsWith("<")) {
+                        console.error("❌ Server returned HTML instead of JSON (likely 404 or index.html).");
+                        messageListEl.innerHTML = `<div class="alert alert-danger">⚠️ Could not load messages. Server returned HTML instead of JSON.</div>`;
+                        return;
+                    }
+
+                    const list = JSON.parse(text);
+                    console.log("✅ Parsed JSON data:", list);
+
+                    if (!Array.isArray(list) || list.length === 0) {
+                        messageListEl.innerHTML = `<div class="alert alert-info">No messages found.</div>`;
+                        console.log("ℹ️ No messages available.");
+                        return;
+                    }
+
                     messageListEl.innerHTML = '';
-                    list.forEach(m => messageListEl.appendChild(renderMessageItem(m)));
-                }catch(e){
-                    console.error('Error loading messages:', e);
+                    list.forEach(m => {
+                        const item = renderMessageItem(m);
+                        messageListEl.appendChild(item);
+                    });
+
+                    console.log("✅ Messages rendered successfully.");
+
+                } catch (err) {
+                    console.error("❌ Error loading messages:", err);
+                    messageListEl.innerHTML = `<div class="alert alert-danger">Error loading messages. Check console for details.</div>`;
                 }
             }
-            if(messageListEl){
-                messageListEl.addEventListener('click', (e)=>{
-                    const item = e.target.closest('.message-item');
-                    if(!item) return;
-                    const id = parseInt(item.dataset.id);
-                    if(e.target.closest('.btn-delete-msg')){
-                        if(!confirm('Delete this message?')) return;
-                        if(DataManager.messages.delete(id)){
-                            item.remove();
-                        } else {
-                            alert('Failed to delete');
-                        }
-                    } else if(e.target.closest('.btn-toggle-read')){
-                        const currentlyRead = item.style.opacity === '0.7' || item.querySelector('.btn-toggle-read').classList.contains('btn-outline-warning');
-                        const updated = DataManager.messages.update(id, { read: !currentlyRead });
-                        if(updated) {
-                            loadMessages();
-                        } else {
-                            alert('Failed to update');
-                        }
-                    }
-                });
-                filterAllBtn?.addEventListener('click', ()=>{ messageFilter='all'; filterAllBtn.classList.add('active'); filterUnreadBtn.classList.remove('active'); loadMessages(); });
-                filterUnreadBtn?.addEventListener('click', ()=>{ messageFilter='unread'; filterUnreadBtn.classList.add('active'); filterAllBtn.classList.remove('active'); loadMessages(); });
-                markAllReadBtn?.addEventListener('click', ()=>{ DataManager.messages.markAllRead(); loadMessages(); });
-                loadMessages();
-            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+            console.log("🌐 DOM loaded, calling loadMessages()...");
+            loadMessages();
+            });
+
+
 
             // FEEDBACK LIST
             const feedbackList = document.querySelector('#feedback-section .feedback-list');

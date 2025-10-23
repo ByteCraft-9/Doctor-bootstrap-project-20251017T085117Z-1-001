@@ -1267,52 +1267,44 @@
             loadReviews();
         })();
 
-        // Contact form with DataManager storage
+        // Contact form submission to backend
         (function(){
             const form = document.getElementById('contactForm');
             if(!form) return;
 
-            form.addEventListener('submit', function(e){
+            form.addEventListener('submit', async function(e){
                 e.preventDefault();
                 const fd = new FormData(form);
                 const payload = {
-                    name: String(fd.get('name')||'').trim(),
-                    phone: String(fd.get('phone')||'').trim(),
-                    email: String(fd.get('email')||'').trim(),
-                    location: String(fd.get('location')||'').trim(),
-                    message: String(fd.get('message')||'').trim()
+                    name: String(fd.get('name') || '').trim(),
+                    phone: String(fd.get('phone') || '').trim(),
+                    email: String(fd.get('email') || '').trim(),
+                    location: String(fd.get('location') || '').trim(),
+                    message: String(fd.get('message') || '').trim()
                 };
-                
-                try{
-                    // Save message to local storage
-                    DataManager.messages.create(payload);
-                    
-                    // Show success modal
-                    try { bootstrap.Modal.getOrCreateInstance(document.getElementById('contactSuccessModal')).show(); } catch(err) {}
-                    form.reset();
-                    
-                    // Optional: Also send email as fallback
-                    const recipient = 'testingu026@gmail.com';
-                    const subject = `Website Contact from ${payload.name || 'Visitor'}`;
-                    const body = `Name: ${payload.name}\nPhone: ${payload.phone}\nEmail: ${payload.email}\nLocation: ${payload.location}\n\nMessage:\n${payload.message}`;
-                    const href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                    
-                    // Create invisible link to trigger email client
-                    const link = document.createElement('a');
-                    link.href = href;
-                    link.style.display = 'none';
-                    document.body.appendChild(link);
-                    setTimeout(() => {
-                        link.click();
-                        document.body.removeChild(link);
-                    }, 1000);
-                    
-                }catch(err){
-                    console.error('Error submitting contact form:', err);
+
+
+                try {
+                    const response = await fetch('/api/messages', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert("Your message has been sent successfully!");
+                        form.reset();
+                    } else {
+                        alert("Failed to send message: " + (data.error || "Unknown error"));
+                    }
+                } catch(err) {
                     alert('Error submitting message. Please try again.');
                 }
             });
         })();
+
 
         // Animated counters for statistics
         (function(){
@@ -2375,6 +2367,63 @@
                 }
             });
         }
+        
+        // Contact Form Submission
+        function submitContactForm(event) {
+            event.preventDefault();
+
+            const contactForm = document.getElementById('contactForm');
+            const name = contactForm.querySelector('input[name="name"]').value.trim();
+            const phone = contactForm.querySelector('input[name="phone"]').value.trim();
+            const email = contactForm.querySelector('input[name="email"]').value.trim();
+            const location = contactForm.querySelector('input[name="location"]').value.trim();
+            const message = contactForm.querySelector('textarea[name="message"]').value.trim();
+
+            // Basic validation
+            if (!name || !email || !message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            const payload = { name, phone, email, location, message };
+
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Sending...';
+
+            fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to send message');
+                return response.json();
+            })
+            .then(data => {
+                alert('Message sent successfully!');
+                contactForm.reset();
+            })
+            .catch(error => {
+                console.error('Error submitting message:', error);
+                alert('Failed to send message. Please try again later.');
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Send Message';
+            });
+        }
+
+        // Attach listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', submitContactForm);
+            }
+        });
 
         // Ensure event listener is added
         document.addEventListener('DOMContentLoaded', () => {

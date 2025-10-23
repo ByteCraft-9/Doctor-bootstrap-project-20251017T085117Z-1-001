@@ -307,6 +307,92 @@ app.post("/api/global-availability", async (req, res) => {
   }
 });
 
+// --- Contact Message Submission ---
+app.post("/api/messages", async (req, res) => {
+  try {
+    const { name, phone, email, location, message } = req.body;
+
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: "Name, email, and message are required." });
+    }
+
+    await sql`
+      INSERT INTO messages (name, phone, email, location, message)
+      VALUES (${name}, ${phone}, ${email}, ${location}, ${message})
+    `;
+
+    res.json({ success: true, message: "Message saved successfully!" });
+
+  } catch (error) {
+    console.error("Error saving message:", error);
+    res.status(500).json({ error: "Failed to save message." });
+  }
+});
+
+
+// --- Save contact message ---
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, phone, email, location, message } = req.body;
+
+    // Basic validation
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: 'Name, email, and message are required.' });
+    }
+
+    // Insert into messages table (read = false by default)
+    const result = await sql`
+      INSERT INTO messages (name, phone, email, location, message, read)
+      VALUES (${name}, ${phone}, ${email}, ${location}, ${message}, false)
+      RETURNING *
+    `;
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Message saved successfully',
+      data: result[0],
+    });
+  } catch (error) {
+    console.error('Error saving contact message:', error);
+    res.status(500).json({ error: 'Failed to save message' });
+  }
+});
+
+// --- MESSAGES ADMIN ROUTES ---
+
+// 📥 Get all messages (optionally unread only)
+app.get('/api/admin/messages', async (req, res) => {
+  try {
+    const { filter } = req.query; // "all" or "unread"
+    const messages = await sql`
+      SELECT * FROM messages
+      ${filter === 'unread' ? sql`WHERE read = false` : sql``}
+      ORDER BY created_at DESC
+    `;
+    res.json(messages);
+  } catch (err) {
+    console.error('Error fetching messages:', err);
+    res.status(500).json({ error: 'Failed to load messages' });
+  }
+});
+
+
+
+// 🗑️ Delete a message
+app.delete('/api/admin/messages/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await sql`DELETE FROM messages WHERE id = ${id}`;
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting message:', err);
+    res.status(500).json({ error: 'Failed to delete message' });
+  }
+});
+
+
+
+
 // Feedback Routes
 // Create new feedback
 app.post("/api/feedback", async (req, res) => {
