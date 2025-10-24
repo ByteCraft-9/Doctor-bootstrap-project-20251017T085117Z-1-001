@@ -151,7 +151,6 @@ const PORT = process.env.PORT || 3000;
 initializeTables().then(() => {
   server.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`Database URL: ${process.env.DATABASE_URL ? 'Configured' : 'NOT SET'}`);
   });
 }).catch(error => {
   console.error("Failed to initialize tables:", error);
